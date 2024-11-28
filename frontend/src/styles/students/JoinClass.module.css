@@ -1,0 +1,22 @@
+
+.search_section {
+
+    width: 90%;
+
+  }
+  
+h1 {
+    color: #333;
+  }
+  
+h2 {
+    color: #555;
+    font-size: 1.2rem;
+  }
+  
+.btn {
+
+    margin-top: 20px;
+
+    width: 30%;
+  }

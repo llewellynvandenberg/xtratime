@@ -1,0 +1,77 @@
+.forum-post {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    margin-top: 0px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forum-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.forum-post-username {
+    font-weight: bold;
+    color: #333;
+}
+
+.forum-post-date {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.forum-post-content {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.question-section {
+    margin-bottom: 20px;
+}
+
+.answer-section {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+}
+
+.answer-section {
+    position: relative;
+}
+
+.button-group {
+    position: absolute;
+    bottom: 2px;
+    right: 10px;
+    display: flex;
+}
+
+.answer-button {
+    background-color: transparent;
+    border: none;
+    margin-left: 20px; /* Adjust spacing between buttons */
+    cursor: pointer;
+    font-size: 24px; /* Increase the font size to make the icons bigger */
+    display: flex; /* Ensures the button takes up the size of its content */
+    align-items: center; /* Center the icon vertically */
+    justify-content: center; /* Center the icon horizontally */
+}
+
+.edit-answer-input {
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.submit-edit-btn {
+    margin-top: 10px;
+}
+
+

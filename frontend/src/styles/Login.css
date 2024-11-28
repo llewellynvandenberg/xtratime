@@ -1,0 +1,39 @@
+.login-card{
+
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 400px;
+}
+.login-container {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 500px;
+}
+
+/* .login-card form input{
+    margin: 10px;
+}
+.login-card form button{
+    margin: 10px;
+} */
+
+/* .input-group {} */
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* //width: 300px; */
+
+    border-radius: 4px;
+    background-color: #d1d4d7;
+    color: #282c34;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin: 10px;
+    display: flex;
+}

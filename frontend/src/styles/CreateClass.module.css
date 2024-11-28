@@ -1,0 +1,33 @@
+.name {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    width: 90%;
+    display: flex;
+    padding-right: 10px;
+    margin-right: 10px;
+}
+
+.select {
+    width: 90%;
+    display: flex;
+    padding-right: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    width: 90%;
+    display: flex;
+    padding-right: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+}
+
+.added_students_list {
+    width: 90%;
+    display: flex;
+    padding-right: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

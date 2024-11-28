@@ -1,0 +1,14 @@
+.announcements-section {
+    border-left: 1px solid #949292;
+    align-items: center;
+}
+
+.title {
+
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
