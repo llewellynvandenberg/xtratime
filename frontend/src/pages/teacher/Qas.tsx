@@ -2,89 +2,148 @@ import { useState, useEffect } from "react";
 import Qas from "../../components/teacher/Qas";
 import SideNav from "../../components/student/SideNav";
 
-// Define your user context
-interface qasProps {
+interface QAItem {
   _id: string;
-  time: EpochTimeStamp;
-  link: string;
+  student_id: string;
+  student_name: string;
   question: string;
   answer?: string;
-  student_name: string;
+  link?: string;
+  timestamp: Date;
   isFAQ?: boolean;
 }
 
 function TeacherQasView() {
   const postID = sessionStorage.getItem("selectedPostID");
-  const [qas, setQas] = useState<qasProps[]>([]);
+  const [qas, setQas] = useState<QAItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchQas = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch("http://localhost:3001/postQas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ post_id: postID?.toString() ?? "" }),
+        body: JSON.stringify({ post_id: postID }),
       });
-      const result = await response.json();
-      setQas(result.postQas);
 
-      console.log("qas data", result);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      if (!response.ok) {
+        throw new Error('Failed to fetch Q&As');
+      }
+
+      const data = await response.json();
+      setQas(data.postQas);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load Q&As');
+      console.error("Error fetching Q&As:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchQas().then(() => {
-      console.log("Classroom info fetched");
-    });
-  }, []);
+    fetchQas();
+  }, [postID]);
 
-  return (
-    <>
-      <SideNav title="Q and A's" />
-
-      <div className="row shifted">
-        <div className="col-md-6">
-          <h2 className="title">Unanswered</h2>
-          {qas &&
-            qas.map(
-              (qa, index) =>
-                !qa.answer &&
-                !qa.isFAQ && (
-                  <Qas
-                    qas_id={qa._id}
-                    name={qa.student_name}
-                    question={qa.question}
-                    answer={qa.answer}
-                    link={qa.link ? qa.link : ""}
-                    refresh={fetchQas}
-                  ></Qas>
-                )
-            )}
-        </div>
-        <div className="col-md-6">
-          <h2 className="title">Answered</h2>
-          {qas &&
-            qas.map(
-              (qa, index) =>
-                (qa.answer || qa.isFAQ) && (
-                  <Qas
-                    qas_id={qa._id}
-                    name={qa.student_name}
-                    question={qa.question}
-                    answer={qa.answer}
-                    link={qa.link ? qa.link : ""}
-                    replieable={false}
-                    isFAQ={qa.isFAQ}
-                    refresh={fetchQas}
-                  ></Qas>
-                )
-            )}
+  if (isLoading) {
+    return (
+      <div className="qas-container">
+        <SideNav 
+          title="Q and A's" 
+          view="teacher"
+          action={() => {}}
+        />
+        <div className="qas-content shifted">
+          <div className="loading-spinner">Loading...</div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="qas-container">
+        <SideNav 
+          title="Q and A's" 
+          view="teacher"
+          action={() => {}}
+        />
+        <div className="qas-content shifted">
+          <div className="error-message">
+            {error}
+            <button onClick={fetchQas} className="retry-button">Retry</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const unansweredQAs = qas?.filter(qa => !qa.answer && !qa.isFAQ) || [];
+  const answeredQAs = qas?.filter(qa => qa.answer || qa.isFAQ) || [];
+
+  return (
+    <div className="qas-container">
+      <SideNav 
+        title="Q and A's" 
+        view="teacher"
+        action={() => {}}
+      />
+      
+      <div className="qas-content shifted">
+        <div className="qas-column unanswered-column">
+          <div className="qas-header unanswered-header">
+            <h2>Unanswered Questions</h2>
+            <span className="qas-count badge badge-warning">
+              {unansweredQAs.length} pending
+            </span>
+          </div>
+          <div className="qas-list">
+            {unansweredQAs.map((qa) => (
+              <Qas
+                key={qa._id}
+                qas_id={qa._id}
+                name={qa.student_name}
+                question={qa.question}
+                timestamp={qa.timestamp}
+                refresh={fetchQas}
+                className="unanswered-qa"
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="qas-column answered-column">
+          <div className="qas-header answered-header">
+            <h2>Answered Questions</h2>
+            <span className="qas-count badge badge-success">
+              {answeredQAs.length} resolved
+            </span>
+          </div>
+          <div className="qas-list">
+            {answeredQAs.map((qa) => (
+              <Qas
+                key={qa._id}
+                qas_id={qa._id}
+                name={qa.student_name}
+                question={qa.question}
+                answer={qa.answer}
+                link={qa.link}
+                timestamp={qa.timestamp}
+                replieable={false}
+                isFAQ={qa.isFAQ}
+                refresh={fetchQas}
+                className="answered-qa"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
 export default TeacherQasView;

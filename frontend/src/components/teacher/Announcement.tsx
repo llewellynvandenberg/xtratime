@@ -1,12 +1,16 @@
 import React from "react";
 import "../../styles/Announcement.css";
-import { AiOutlineLink } from "react-icons/ai";
+import { formatDistanceToNow } from 'date-fns';
+import { AiOutlineLink, AiOutlineClockCircle, AiOutlineUser } from "react-icons/ai";
+
 
 interface AnnouncementProps {
   title: string;
   content: string;
   link?: string;
-  image?: ImageBitmap;
+  image?: string;
+  createdAt: Date;
+  author: string;
 }
 
 const Announcement: React.FC<AnnouncementProps> = ({
@@ -14,33 +18,42 @@ const Announcement: React.FC<AnnouncementProps> = ({
   content,
   link,
   image,
+  createdAt,
+  author
 }) => {
+  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+
   return (
-    <>
-      {link ? (
-        <div className="anouncement">
-          <div className="announcement-content">
-            <div className="forum-post-header">
-              <span className="forum-post-username">{title}</span>
-              <span className="forum-post-date">{"20/03/2024"}</span>
-            </div>
-            <div className="announcement-header announcement-link">
-              {content}
-            </div>
-          </div>
+    <div className={`announcement ${link ? 'announcement-with-link' : ''}`}>
+      <div className="announcement-header">
+        <div className="announcement-author">
+          <AiOutlineUser className="icon" />
+          <span>{author}</span>
         </div>
-      ) : (
-        <div className="announcement">
-          <div className="forum-post-header">
-            <span className="forum-post-username">{title}</span>
-            <span className="forum-post-date">{"20/03/2024"}</span>
-          </div>
-          <div className="announcement-content">
-            <div className="announcement-header">{content}</div>
-          </div>
+        <div className="announcement-time">
+          <AiOutlineClockCircle className="icon" />
+          <span>{timeAgo}</span>
         </div>
-      )}
-    </>
+      </div>
+
+      <div className="announcement-body">
+        <h3 className="announcement-title">{title}</h3>
+        <p className="announcement-content">{content}</p>
+        
+        {image && (
+          <div className="announcement-image">
+            <img src={image} alt={title} />
+          </div>
+        )}
+        
+        {link && (
+          <a href={link} className="announcement-link" target="_blank" rel="noopener noreferrer">
+            <AiOutlineLink className="icon" />
+            <span>View Resource</span>
+          </a>
+        )}
+      </div>
+    </div>
   );
 };
 

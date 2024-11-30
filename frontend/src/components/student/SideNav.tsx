@@ -1,145 +1,97 @@
 import React from "react";
-import "../../styles/Announcement.css";
+import { Link, useLocation } from "react-router-dom";
 import "../../styles/SideNav.css";
-import { Link } from "react-router-dom";
+
 interface SideNavProps {
   title: string;
-  view?: string;
-  action?: Function;
+  view: string;
+  action: () => void;
+  onBack?: () => void;
   backLink?: string;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ title, view, action, backLink }) => {
+const SideNav: React.FC<SideNavProps> = ({ title, view, action, onBack, backLink }) => {
   const role = sessionStorage.getItem("role");
+  const location = useLocation();
+  const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+  const menuItems = {
+    student: [
+      { path: "/student", label: "My classes", icon: "📚" },
+      { path: "/student/join-class", label: "Join new class", icon: "➕" },
+      { path: "/student/events", label: "Events", icon: "📅" },
+      { path: "/student/todos", label: "To do's", icon: "✓" },
+      { path: "/student/profile", label: "Profile", icon: "👤" },
+      { path: "/student/settings", label: "Settings", icon: "⚙️" },
+    ],
+    teacher: [
+      { path: "/teacher", label: "My classes", icon: "📚" },
+      { path: "/teacher/new-class", label: "Create new class", icon: "➕" },
+      { path: "/teacher/events", label: "Events", icon: "📅" },
+      { path: "/teacher/todos", label: "To do's", icon: "✓" },
+      { path: "/teacher/profile", label: "Profile", icon: "👤" },
+      { path: "/teacher/settings", label: "Settings", icon: "⚙️" },
+    ],
+  };
+
+  const items = role === "student" ? menuItems.student : menuItems.teacher;
+
   return (
-    <>
-      {role === "student" && (
-        <div className="sidebar open">
-          <h3 className="page-title">{title}</h3>
-          <Link
-            className="sidebar-item"
-            to={`/student`}
-            style={{ textDecoration: "none" }}
-          >
-            My classes
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/student/join-class`}
-            style={{ textDecoration: "none" }}
-          >
-            Join new class
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/student`}
-            style={{ textDecoration: "none" }}
-          >
-            Events
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/student`}
-            style={{ textDecoration: "none" }}
-          >
-            To do's
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/student`}
-            style={{ textDecoration: "none" }}
-          >
-            Settings
-          </Link>
-          {backLink && (
-            <Link
-              className="sidebar-item"
-              to={backLink}
-              style={{ textDecoration: "none" }}
-            >
-              <hr />
-              Go Back
-            </Link>
-          )}
+    <div className="sidebar open">
+      <div className="sidebar-header">
+        <h3 className="page-title">{title}</h3>
+        <div className="user-info">
+          <div className="user-avatar">
+            {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+          </div>
+          <span className="user-name">{user.name || "User"}</span>
         </div>
-      )}
-      {role === "teacher" && (
-        <div className="sidebar open">
-          <h3 className="page-title">{title}</h3>
+      </div>
+
+      <nav className="sidebar-nav">
+        {items.map((item) => (
           <Link
-            className="sidebar-item"
-            to={`/teacher`}
-            style={{ textDecoration: "none" }}
+            key={item.path}
+            to={item.path}
+            className={`sidebar-item ${
+              location.pathname === item.path ? "active" : ""
+            }`}
           >
-            My classes
+            <span className="item-icon">{item.icon}</span>
+            <span className="item-label">{item.label}</span>
           </Link>
-          <Link
-            className="sidebar-item"
-            to={`/teacher/new-class`}
-            style={{ textDecoration: "none" }}
+        ))}
+      </nav>
+
+      <div className="sidebar-footer">
+        {view === "class" && role === "teacher" && (
+          <button
+            className="sidebar-action delete"
+            onClick={() => action && action()}
           >
-            Create new class
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/teacher`}
-            style={{ textDecoration: "none" }}
+            <span className="item-icon">🗑️</span>
+            <span className="item-label">Delete Class</span>
+          </button>
+        )}
+
+        {view === "topic" && role === "teacher" && (
+          <button
+            className="sidebar-action delete"
+            onClick={() => action && action()}
           >
-            Events
+            <span className="item-icon">🗑️</span>
+            <span className="item-label">Delete Topic</span>
+          </button>
+        )}
+
+        {onBack && backLink && (
+          <Link to={backLink} className="sidebar-action back">
+            <span className="item-icon">←</span>
+            <span className="item-label">Go Back</span>
           </Link>
-          <Link
-            className="sidebar-item"
-            to={`/teacher`}
-            style={{ textDecoration: "none" }}
-          >
-            To do's
-          </Link>
-          <Link
-            className="sidebar-item"
-            to={`/teacher`}
-            style={{ textDecoration: "none" }}
-          >
-            Settings
-          </Link>
-          {view === "class" && (
-            <div
-              className="sidebar-item"
-              onClick={() => {
-                if (action) {
-                  action();
-                }
-              }}
-            >
-              <hr />
-              Delete Class
-            </div>
-          )}
-          {view === "topic" && (
-            <div
-              className="sidebar-item"
-              onClick={() => {
-                if (action) {
-                  action();
-                }
-              }}
-            >
-              <hr />
-              Delete Topic
-            </div>
-          )}
-          {backLink && (
-            <Link
-              className="sidebar-item"
-              to={backLink}
-              style={{ textDecoration: "none" }}
-            >
-              <hr />
-              Go Back
-            </Link>
-          )}
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 };
 

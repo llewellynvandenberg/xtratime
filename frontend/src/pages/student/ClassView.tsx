@@ -41,7 +41,11 @@ function StudentClassView() {
 
   return (
     <>
-      <SideNav title={classData ? classData.class_name : ""} />
+      <SideNav 
+        title={classData ? classData.class_name : ""} 
+        view="class"
+        action={() => {}}
+      />
       <div className="shifted">
         {classData !== null && (
           <>

@@ -49,7 +49,11 @@ const StudentHome = () => {
 
   return (
     <>
-      <SideNav title="My classes" />
+      <SideNav 
+        title="My classes" 
+        view="student"
+        action={() => {}}  // Add empty function if no action needed
+      />
       <div className="shifted">
         <div className="row">
           <div className="col-md-8">

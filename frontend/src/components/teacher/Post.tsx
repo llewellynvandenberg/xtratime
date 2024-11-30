@@ -7,21 +7,27 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 interface PostProps {
+  title: string;
   content: string;
   link: string;
-  children?: React.ReactNode;
   post_id: string;
-  setEditPost?: Function;
-  setEditedContent?: Function;
-  setEditedLink?: Function;
-  setEditedPostID?: Function;
+  isTodo: boolean;
+  deadline?: Date;
+  setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditedContent: React.Dispatch<React.SetStateAction<string>>;
+  setEditedLink: React.Dispatch<React.SetStateAction<string>>;
+  setEditedPostID: React.Dispatch<React.SetStateAction<string>>;
+  children?: React.ReactNode;
 }
 
 const Post: React.FC<PostProps> = ({
+  title,
   content,
   link,
   children,
   post_id,
+  isTodo,
+  deadline,
   setEditPost,
   setEditedContent,
   setEditedLink,
@@ -79,7 +85,10 @@ const Post: React.FC<PostProps> = ({
     <>
       <div className="post">
         <div className="post-content">
-          <div className="post-header">{content}</div>
+          <div className="post-header">
+            <h3>{title}</h3>
+            {content}
+          </div>
 
           <div className="post-button-section">
             <div className="button-group">
@@ -117,33 +126,30 @@ const Post: React.FC<PostProps> = ({
 
           {children ? children : <></>}
           {newQuestionClicked ? (
-            <>
-              <div className="announcement">
-                <div className="forum-post-header">
-                  <span className="forum-post-username">Add FAQ</span>
-                  <span className="forum-post-date">{"20/03/2024"}</span>
-                </div>
-                <div className="announcement-content">
-                  <div className="announcement-header">
-                    <textarea
-                      placeholder="Add answer to FAQ for this post..."
-                      value={newQuestion}
-                      onChange={handleQuestionInput}
-                      className="new-question-input"
-                      maxLength={500}
-                    />
-                    <input className="link-input" placeholder="Link" />
-                    <button
-                      onClick={submitQuestion}
-                      type="button"
-                      className="btn btn-light"
-                    >
-                      Submit
-                    </button>
-                  </div>
+            <div className="faq-answer-container">
+              <div className="faq-answer-header">
+                <h4>Add FAQ Answer</h4>
+                <span className="faq-date">{"20/03/2024"}</span>
+              </div>
+              <div className="faq-answer-content">
+                <textarea
+                  placeholder="Add your FAQ answer here..."
+                  value={newQuestion}
+                  onChange={handleQuestionInput}
+                  className="faq-answer-input"
+                  maxLength={500}
+                />
+                <div className="faq-answer-actions">
+                  <button
+                    onClick={submitQuestion}
+                    type="button"
+                    className="faq-submit-btn"
+                  >
+                    Submit Answer
+                  </button>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <></>
           )}

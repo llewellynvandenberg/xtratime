@@ -16,7 +16,7 @@ function StudentQasView() {
   const postID = sessionStorage.getItem("selectedPostID");
   const [qas, setQas] = useState<qasProps[]>([]);
 
-  const fetchClasses = async () => {
+  const getPostQas = async () => {
     try {
       const response = await fetch("http://localhost:3001/postQas", {
         method: "POST",
@@ -35,14 +35,18 @@ function StudentQasView() {
   };
 
   useEffect(() => {
-    fetchClasses().then(() => {
-      console.log("Classroom info fetched");
+    getPostQas().then(() => {
+      console.log("Qas fetched");
     });
   }, []);
   console.log("qas", qas);
   return (
     <>
-      <SideNav title="Q and A's" />
+      <SideNav 
+        title="Q and A's" 
+        view="student"
+        action={() => {}}
+      />
 
       <div className="shifted">
         <br />

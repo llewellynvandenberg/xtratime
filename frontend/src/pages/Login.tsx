@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import RoleToggle from "../components/RoleToggle";
-import Card from "../components/Card";
 import "../styles/Login.css";
 
 const Login = () => {
@@ -80,42 +78,45 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <form>
-        <label>
-          Username:
-          <input
-            type="text"
-            className="form-control"
-            placeholder="john@hotel.com"
-            aria-label="Username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
+      <div className="login-box">
+        <h1 className="login-title">Welcome Back</h1>
+        <p className="login-subtitle">Please sign in to continue</p>
+        
+        <form className="login-form">
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              className="form-control"
+              placeholder="Enter your email"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            placeholder="********"
-            className="form-control"
-            aria-label="Username"
-            aria-describedby="basic-addon1"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <RoleToggle role={role} setRole={setRole} />
-        <br />
-        <button
-          type="button"
-          onClick={changeClicks}
-          className="btn btn-primary"
-        >
-          Login
-        </button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              placeholder="Enter your password"
+              className="form-control"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <RoleToggle role={role} setRole={setRole} />
+
+          <button
+            type="button"
+            onClick={changeClicks}
+            className="login-button"
+          >
+            Sign In
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

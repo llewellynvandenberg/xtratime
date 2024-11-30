@@ -1,0 +1,150 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+}
+
+.dashboard-content {
+  flex: 1;
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.main-content {
+  flex: 1;
+  max-width: calc(100% - 350px);
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.class-card-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.class-card-link:hover {
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+
+.class-card {
+  height: 100%;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e1e4e8;
+  transition: box-shadow 0.2s;
+}
+
+.class-card:hover {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  text-decoration: none;
+}
+
+.class-card-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.add-class-icon {
+  font-size: 2rem;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Announcements Panel */
+.announcements-panel {
+  width: 350px;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+  border: 1px solid #e1e4e8;
+  position: sticky;
+  top: 2rem;
+}
+
+.announcements-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.announcements-list {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.announcements-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  padding: 1rem;
+}
+
+.loading-icon.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.announcements-error {
+  color: #dc3545;
+  padding: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-content {
+    flex-direction: column;
+  }
+
+  .main-content {
+    max-width: 100%;
+  }
+
+  .announcements-panel {
+    width: 100%;
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .classes-grid {
+    grid-template-columns: 1fr;
+  }
+} 

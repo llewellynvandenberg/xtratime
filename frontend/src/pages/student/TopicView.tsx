@@ -52,7 +52,11 @@ function StudentTopicView() {
 
   return (
     <>
-      <SideNav title="Posts" />
+      <SideNav 
+        title="Posts" 
+        view="posts"
+        action={() => {}}
+      />
       <div className="shifted">
         <br />
         {posts ? (

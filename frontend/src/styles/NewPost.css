@@ -48,3 +48,57 @@
     border-radius: 5px;
     margin-top: 10px;
 }
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox-group label {
+  margin: 0;
+  line-height: 1;
+}
+
+.deadline-picker {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.deadline-picker label {
+  margin: 0;
+}
+
+.deadline-picker input {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.new-post-title-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.post-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}

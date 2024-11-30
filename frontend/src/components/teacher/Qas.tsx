@@ -10,9 +10,11 @@ interface QasProps {
   question: string;
   answer?: string;
   link?: string;
+  timestamp: Date;
   replieable?: boolean;
   isFAQ?: boolean;
-  refresh?: Function;
+  refresh?: () => Promise<void>;
+  className?: string;
 }
 
 const Qas: React.FC<QasProps> = ({
@@ -21,9 +23,11 @@ const Qas: React.FC<QasProps> = ({
   question,
   answer,
   link,
+  timestamp,
   isFAQ,
   refresh,
   replieable = true,
+  className,
 }) => {
   const [replyMode, setReplyMode] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -53,6 +57,7 @@ const Qas: React.FC<QasProps> = ({
 
   const deleteQuestion = async () => {
     try {
+      console.log("deleting qas", qas_id);
       const response = await fetch("http://localhost:3001/deleteQas", {
         method: "POST",
         headers: {
@@ -110,15 +115,24 @@ const Qas: React.FC<QasProps> = ({
     });
   };
 
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
-    <div className={`forum-post`}>
+    <div className={`forum-post ${className}`}>
       <div className="question-section">
         <div className="forum-post-header">
           <span className="forum-post-username">
-            {isFAQ ? "You (FAQ)" : name}
+            {isFAQ ? "You (FAQ):" : `${name}:`}
           </span>
-
-          <span className="forum-post-date">{"20/03/2024"}</span>
+          <span className="forum-post-date">{formatDate(timestamp)}</span>
           {!answer && !isFAQ && (
             <div className="answer-button">
               <BsReply
@@ -170,7 +184,7 @@ const Qas: React.FC<QasProps> = ({
               </button>
               <button
                 onClick={() => {
-                  handleAnswer();
+                  handleDelete();
                 }}
                 type="button"
                 className="btn btn-light"
@@ -183,8 +197,8 @@ const Qas: React.FC<QasProps> = ({
       )}
       {answer && (
         <div className="answer-section">
-          <div className="forum-post-header">
-            <span className="forum-post-username">{"Answer"}</span>
+          <div className="forum-post-header" style={{borderTop: '1px solid #e5e7eb', paddingTop: '8px', marginTop: '8px'}}>
+            <span className="forum-post-username">{"You:"}</span>
             <span className="forum-post-date">{"20/03/2024"}</span>
           </div>
 
@@ -252,7 +266,7 @@ const Qas: React.FC<QasProps> = ({
                 <button
                   type="button"
                   className="btn btn-light submit-edit-btn"
-                  onClick={handleDelete}
+                  onClick={() => handleDelete()}
                 >
                   Delete
                 </button>

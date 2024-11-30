@@ -8,6 +8,7 @@ import "../../styles/students/Home.css";
 import Card from "../../components/Card";
 
 import Announcement from "../../components/student/Announcement";
+import "../../styles/teacher/NewTopic.css";
 
 interface studentOptionsProps {
   value: string;
@@ -70,31 +71,45 @@ const NewTopicView = () => {
 
   return (
     <>
-      <SideNav title="New class" />
-      <div className="shifted">
-        <br />
-        <h2>Add a new topic:</h2>
+      <SideNav 
+        title="New Topic" 
+        view="teacher"
+        action={() => {}}
+      />
+      <div className="shifted new-topic-container">
+        <div className="new-topic-form">
+          <h2 className="new-topic-title">Create New Topic</h2>
+          
+          <div className="form-group">
+            <label htmlFor="topicName">Topic Name</label>
+            <input
+              id="topicName"
+              className="form-control"
+              placeholder="Enter topic name..."
+              value={topicName}
+              onChange={handleTopicNameChange}
+            />
+          </div>
 
-        <input
-          placeholder="Topic name..."
-          value={topicName}
-          onChange={handleTopicNameChange}
-        />
-        <br />
+          <div className="form-group">
+            <label htmlFor="topicDescription">Description</label>
+            <textarea
+              id="topicDescription"
+              className="form-control topic-description"
+              placeholder="Enter topic description..."
+              value={topicDescription}
+              onChange={(event) => setTopicDescription(event.target.value)}
+            />
+          </div>
 
-        <input
-          placeholder="Topic description..."
-          value={topicDescription}
-          onChange={(event) => setTopicDescription(event.target.value)}
-        />
-        <br />
-        <button
-          onClick={handleSubmitClicked}
-          type="button"
-          className="btn btn-light"
-        >
-          Create Topic
-        </button>
+          <button
+            onClick={handleSubmitClicked}
+            type="button"
+            className="create-topic-btn"
+          >
+            Create Topic
+          </button>
+        </div>
       </div>
     </>
   );

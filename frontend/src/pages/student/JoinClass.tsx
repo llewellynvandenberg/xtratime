@@ -92,7 +92,11 @@ const JoinClass = () => {
 
   return (
     <>
-      <SideNav title="Join a Class" />
+      <SideNav 
+        title="Join a Class" 
+        view="student"
+        action={() => "join"}
+      />
       <div className={`shifted ${styles.page_content}`}>
         <div className={styles.search_section}>
           <br />

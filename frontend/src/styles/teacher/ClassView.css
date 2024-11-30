@@ -1,0 +1,145 @@
+.dashboard-content {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topics-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.students-panel {
+  width: 320px;
+  background: white;
+  border-left: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  height: 100%;
+  position: sticky;
+  top: 0;
+  right: 0;
+  overflow-y: auto;
+}
+
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.students-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.student-count {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.add-student-btn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.add-student-btn:hover {
+  background: #4338ca;
+}
+
+.students-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.student-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.student-item:hover {
+  background: #f9fafb;
+  text-decoration: none;
+}
+
+.student-avatar {
+  width: 36px;
+  height: 36px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.student-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-name {
+  display: block;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-email {
+  display: block;
+  font-size: 0.813rem;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove-student-btn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.student-item:hover .remove-student-btn {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.remove-student-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  text-decoration: none;
+} 

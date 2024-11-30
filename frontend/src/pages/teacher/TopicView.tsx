@@ -16,10 +16,13 @@ interface topicsDataProps {
 
 interface postDataProps {
   _id: string;
+  title: string;
   time: EpochTimeStamp;
   content: string;
   topic_code: string;
   link?: string;
+  isTodo: boolean;
+  deadline?: Date;
   qas?: {
     _id: string;
     student_name: string;
@@ -44,7 +47,16 @@ function TeacherTopicView() {
 
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const [isTodo, setIsTodo] = useState(false);
+  const [deadline, setDeadline] = useState<Date>();
+
+  const [title, setTitle] = useState("");
+
   const createPost = async () => {
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:3001/createPost", {
         method: "POST",
@@ -52,21 +64,29 @@ function TeacherTopicView() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          title: title,
           content: content,
           link: link,
           topic_id: topicID,
+          isTodo: isTodo,
+          deadline: deadline,
         }),
       });
       const result = await response.json();
+      setMessage("Post created successfully!");
     } catch (error) {
       console.error("Error fetching data:", error);
+      setMessage("Failed to create post.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlenCreatePost = () => {
+  const handleCreatePost = () => {
     createPost().then(() => {
       setContent("");
       setLink("");
+      setTitle("");
       fetchPosts();
     });
   };
@@ -103,6 +123,7 @@ function TeacherTopicView() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          title: title,
           content: editedContent,
           link: editedLink,
           post_id: selectedPostID,
@@ -180,128 +201,205 @@ function TeacherTopicView() {
     fetchPosts();
   }, []);
 
+  // Update the edit post section
+  const editPostSection = (
+    <div className="edit-post-container">
+      <div className="edit-post-header">
+        <h2>Edit Post</h2>
+        <button
+          onClick={handleCancelEditPost}
+          className="close-edit-btn"
+          title="Cancel"
+        >
+          ×
+        </button>
+      </div>
+      <div className="edit-post-content">
+        <div className="input-group">
+          <label htmlFor="content">Content</label>
+          <textarea
+            id="content"
+            placeholder="Post content"
+            className="edit-post-input"
+            value={editedContent}
+            onChange={(event) => setEditedContent(event.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="link">Link (optional)</label>
+          <input
+            id="link"
+            type="text"
+            placeholder="Add a link"
+            className="edit-post-input"
+            value={editedLink}
+            onChange={(event) => setEditedLink(event.target.value)}
+          />
+        </div>
+      </div>
+      <div className="edit-post-actions">
+        <button
+          onClick={handleUpdatePost}
+          className="btn-update"
+          disabled={!editedContent.trim()}
+        >
+          Update Post
+        </button>
+        <button
+          onClick={handleDeletePost}
+          className="btn-delete"
+        >
+          Delete Post
+        </button>
+      </div>
+    </div>
+  );
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value);
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    setDeadline(localDate);
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
-      <SideNav title="Posts" view="topic" action={handleDeleteTopic} />
-      <div className="row shifted topic-body">
-        <div className="col-md-6">
-          {posts &&
-            posts
-              .slice()
-              .reverse()
-              .map((post, index) => (
-                <>
+      <SideNav 
+        title="Posts" 
+        view="topic" 
+        action={handleDeleteTopic} 
+        onBack={handleBack} 
+      />
+      <div className="topic-body">
+        <div className="topic-content">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="section-header">
+                <h2>Recent Posts</h2>
+                <span className="post-count">{posts.length} posts</span>
+              </div>
+              
+              {posts.length === 0 ? (
+                <div className="empty-state">
+                  <p>No posts yet. Create your first post!</p>
+                </div>
+              ) : (
+                posts.slice().reverse().map((post) => (
                   <Post
+                    key={post._id}
+                    title={post.title}
                     content={post.content}
-                    link={post.link ? post.link : ""}
+                    link={post.link || ""}
                     post_id={post._id}
+                    isTodo={post.isTodo}
+                    deadline={post.deadline}
                     setEditPost={setEditPost}
                     setEditedContent={setEditedContent}
                     setEditedLink={setEditedLink}
                     setEditedPostID={setSelectedPostID}
                   >
                     {post.qas && (
-                      <>
-                        <Link
-                          to={`/teacher/qas`}
-                          style={{ textDecoration: "none" }}
-                          onClick={() =>
-                            sessionStorage.setItem("selectedPostID", post._id)
-                          }
-                        >
-                          <Qas
-                            qas_id={post.qas._id}
-                            name={post.qas.student_name}
-                            question={post.qas.question}
-                            answer={post.qas.answer}
-                            link={post.qas.link ? post.qas.link : ""}
-                            replieable={false}
-                          />
-                        </Link>
-                      </>
+                      <Link
+                        to={`/teacher/qas`}
+                        style={{ textDecoration: 'none' }}
+                        onClick={() => sessionStorage.setItem("selectedPostID", post._id)}
+                      >
+                        <Qas
+                          qas_id={post.qas._id}
+                          name={post.qas.student_name}
+                          question={post.qas.question}
+                          answer={post.qas.answer}
+                          link={post.qas.link || ""}
+                          replieable={false}
+                          timestamp={new Date(post.time)}
+                        />
+                      </Link>
                     )}
                   </Post>
-                </>
-              ))}
-        </div>
-        <div className="col-md-6">
-          <div className="post">
-            <div className="post-content">
-              <div className="post-header">
-                {editPost ? (
-                  <>
-                    <h6>Edit Post</h6>
-                    <textarea
-                      placeholder="Content"
-                      className="new-post-content-input"
-                      value={editedContent}
-                      onChange={(event) => setEditedContent(event.target.value)}
-                    />
-                    <br />
+                ))
+              )}
+            </div>
+
+            <div className="col-md-6">
+              <div className="section-header">
+                <h2>{editPost ? 'Edit Post' : 'Create New Post'}</h2>
+              </div>
+              
+              {editPost ? (
+                editPostSection
+              ) : (
+                <div className="post create-post">
+                  <div className="post-content">
                     <input
-                      placeholder="Link"
-                      className="link-input"
-                      value={editedLink}
-                      onChange={(event) => setEditedLink(event.target.value)}
+                      placeholder="Post title"
+                      className="new-post-title-input"
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
                     />
-                    <br />
-                    <div className="row">
-                      <div className="col-md-4">
-                        <button
-                          onClick={handleUpdatePost}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Submit Update
-                        </button>
-                      </div>
-                      <div className="col-md-4">
-                        <button
-                          onClick={handleDeletePost}
-                          type="button"
-                          className="btn btn-danger"
-                        >
-                          Delete Post
-                        </button>
-                      </div>
-                      <div className="col-md-4">
-                        <button
-                          onClick={handleCancelEditPost}
-                          type="button"
-                          className="btn btn-warning"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h6>Add new post</h6>
                     <textarea
-                      placeholder="Content"
+                      placeholder="What would you like to share?"
                       className="new-post-content-input"
                       value={content}
                       onChange={(event) => setContent(event.target.value)}
                     />
-                    <br />
-                    <input
-                      placeholder="Link"
-                      className="link-input"
-                      value={link}
-                      onChange={(event) => setLink(event.target.value)}
-                    />
-                    <br />
-                    <button
-                      onClick={handlenCreatePost}
-                      type="button"
-                      className="btn btn-light"
-                    >
-                      Submit Post
-                    </button>
-                  </>
-                )}
-              </div>
+                    <div className="input-group">
+                      <input
+                        placeholder="Add a link (optional)"
+                        className="link-input"
+                        value={link}
+                        onChange={(event) => setLink(event.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="todo-section">
+                      <div className="checkbox-group">
+                        <input
+                          type="checkbox"
+                          id="isTodo"
+                          checked={isTodo}
+                          onChange={(e) => setIsTodo(e.target.checked)}
+                        />
+                        <label htmlFor="isTodo">Make this a todo</label>
+                      </div>
+                      
+                      {isTodo && (
+                        <div className="deadline-picker">
+                          <label>Deadline:</label>
+                          <input
+                            type="date"
+                            value={deadline ? deadline.toISOString().split('T')[0] : ''}
+                            onChange={handleDateChange}
+                            required
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="post-actions">
+                      <button
+                        onClick={handleCreatePost}
+                        type="button"
+                        className="submit-btn"
+                        disabled={loading || !content.trim() || (isTodo && !deadline)}
+                      >
+                        {loading ? (
+                          <span className="loading-spinner">Submitting...</span>
+                        ) : (
+                          'Create Post'
+                        )}
+                      </button>
+                    </div>
+                    {message && (
+                      <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>
+                        {message}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

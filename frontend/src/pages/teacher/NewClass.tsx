@@ -56,25 +56,21 @@ const NewClassView = () => {
   };
 
   const handleStudentChange = (event: any) => {
-    setSelectedStudentName(event.label);
-    setSelectedStudentID(event.value);
-  };
-
-  const addStudent = () => {
-    if (!selectedStudentID) {
-      alert("Please select a student");
+    if (!event) return;
+    
+    if (addedStudents.some(student => student.id === event.value)) {
       return;
     }
+    
     const newStudent = {
-      fullname: selectedStudentName,
-      id: selectedStudentID,
+      fullname: event.label,
+      id: event.value,
     };
+    
     setAddedStudents([...addedStudents, newStudent]);
-    setStudentsOptions(
-      studentsOptions.filter((student) => student.value !== selectedStudentID)
+    setStudentsOptions(prevOptions => 
+      prevOptions.filter(student => student.value !== event.value)
     );
-    setSelectedStudentID("");
-    setSelectedStudentName("");
   };
 
   const createClass = async () => {
@@ -131,64 +127,110 @@ const NewClassView = () => {
     setAddedStudents([]);
   };
 
+  const handleRemoveStudent = (studentToRemove: studentProps) => {
+    setAddedStudents(prevStudents => 
+      prevStudents.filter(student => student.id !== studentToRemove.id)
+    );
+    
+    if (!studentsOptions.some(option => option.value === studentToRemove.id)) {
+      setStudentsOptions(prevOptions => [
+        ...prevOptions,
+        { value: studentToRemove.id, label: studentToRemove.fullname }
+      ]);
+    }
+  };
+
   useEffect(() => {
     fetchStudentOptions();
   }, []);
 
   return (
     <>
-      <SideNav title="New class" />
-      <br />
-      <div className="shifted">
-        <input
-          placeholder="Class name"
-          value={className}
-          onChange={handleClassNameChange}
-          className={styles.name}
-        />
-        <Select
-          options={gradeOptions}
-          onChange={(e) => setSelectedGrade(e?.value || "")}
-          placeholder="Select grade"
-        />
-        <Select
-          options={subjectOptions}
-          onChange={(e) => setSelectedSubject(e?.value || "")}
-          placeholder="Select subject"
-        />
-
-        <Select
-          options={studentsOptions}
-          value={{ label: selectedStudentName, value: selectedStudentID }}
-          onChange={handleStudentChange}
-          className={styles.select}
-        />
-        <button
-          onClick={addStudent}
-          type="button"
-          className={`btn btn-light ${styles.btn}`}
-        >
-          Add student
-        </button>
-
-        <div className="added_students_list">
-          <hr style={{ width: "90%" }} />
-          {addedStudents.map((student: studentProps, index: number) => (
-            <div key={student.id}>
-              <p>{student.fullname}</p>
-              <hr style={{ width: "90%" }} />
+      <SideNav 
+        title="New class" 
+        view="teacher"
+        action={() => {}}
+      />
+      <main style={{ marginLeft: "250px", paddingTop: "2rem" }}>
+        <div className={styles.container}>
+          <div className={styles.formSection}>
+            <div className={styles.header}>
+              <h1>Create New Class</h1>
+              <p>Fill in the details below to create a new class</p>
             </div>
-          ))}
-        </div>
 
-        <button
-          onClick={handleCreateClass}
-          type="button"
-          className={`btn btn-light ${styles.btn}`}
-        >
-          Create Class
-        </button>
-      </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Class Name</label>
+              <input
+                placeholder="Enter class name"
+                value={className}
+                onChange={handleClassNameChange}
+                className={styles.name}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Grade Level</label>
+              <Select
+                options={gradeOptions}
+                onChange={(e) => setSelectedGrade(e?.value || "")}
+                placeholder="Select grade"
+                className={styles.select}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Subject</label>
+              <Select
+                options={subjectOptions}
+                onChange={(e) => setSelectedSubject(e?.value || "")}
+                placeholder="Select subject"
+                className={styles.select}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Add Students</label>
+              <Select
+                options={studentsOptions}
+                onChange={handleStudentChange}
+                placeholder="Select student"
+                className={styles.select}
+                value={null}
+              />
+            </div>
+
+            {addedStudents.length > 0 && (
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>Added Students</label>
+                <div className={styles.studentsList}>
+                  {addedStudents.map((student: studentProps) => (
+                    <div key={student.id} className={styles.studentItem}>
+                      <span>{student.fullname}</span>
+                      <button 
+                        onClick={() => handleRemoveStudent(student)}
+                        className={styles.removeBtn}
+                        type="button"
+                        aria-label={`Remove ${student.fullname}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handleCreateClass}
+              type="button"
+              className={`${styles.btn} ${styles.btnPrimary}`}
+            >
+              Create Class
+            </button>
+          </div>
+        </div>
+      </main>
     </>
   );
 };

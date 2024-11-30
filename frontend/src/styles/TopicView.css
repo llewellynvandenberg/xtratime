@@ -1,3 +1,326 @@
 .topic-body {
-    padding-top: 20px;
+    padding: 40px 40px 40px 290px;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.topic-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.col-md-6 {
+    flex: 1;
+    min-width: 300px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.post-count {
+    background-color: #e9ecef;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.post {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.create-post {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+}
+
+.new-post-content-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.link-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-btn {
+    padding: 10px 24px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #357abd;
+}
+
+.submit-btn:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+}
+
+.message {
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 16px;
+    font-size: 0.95rem;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+    color: #6c757d;
+}
+
+.loading-spinner {
+    display: inline-flex;
+    align-items: center;
+}
+
+.loading-spinner::after {
+    content: '';
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .topic-body {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .col-md-6 {
+        flex: 100%;
+    }
+}
+
+/* Add these new styles for the edit mode */
+.edit-post-container {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+    position: relative;
+}
+
+.edit-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.edit-post-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.close-edit-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 1;
+}
+
+.close-edit-btn:hover {
+    color: #343a40;
+}
+
+.edit-post-content {
+    margin-bottom: 24px;
+}
+
+.edit-post-content .input-group {
+    margin-bottom: 20px;
+}
+
+.edit-post-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+    font-weight: 500;
+}
+
+.edit-post-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+textarea.edit-post-input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.edit-post-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.edit-post-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-update, .btn-delete {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-update {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.btn-update:hover {
+    background-color: #357abd;
+}
+
+.btn-update:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+}
+
+.btn-delete {
+    background-color: #fff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .edit-post-actions {
+        flex-direction: column;
+    }
+    
+    .btn-update, .btn-delete {
+        width: 100%;
+    }
+}
+
+.todo-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.deadline-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deadline-picker input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Post title in display */
+.post-header h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
 }
